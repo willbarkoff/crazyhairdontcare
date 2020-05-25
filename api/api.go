@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gorilla/sessions"
 	"github.com/julienschmidt/httprouter"
@@ -26,7 +27,7 @@ type statusResponse struct {
 }
 
 var password string
-var message string
+var message []string
 
 var db *sql.DB
 
@@ -43,7 +44,7 @@ func Initalize(r *httprouter.Router) {
 		panic(err)
 	}
 
-	message = string(messageRaw)
+	message = strings.Split(string(messageRaw), "\n")
 
 	db, err = sql.Open("mysql", dbUsername+":"+dbPassword+"@/"+dbDatabase+"?charset=utf8mb4&collation=utf8mb4_unicode_ci")
 	if err != nil {

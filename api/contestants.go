@@ -12,7 +12,7 @@ import (
 type contestantsResponse struct {
 	Status      string       `json:"status"`
 	Contestants []contestant `json:"contestants"`
-	Message     string       `json:"message"`
+	Message     []string     `json:"message"`
 }
 
 type contestant struct {
