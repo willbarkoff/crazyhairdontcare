@@ -1,6 +1,7 @@
 package api
 
 import (
+	"math/rand"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -13,9 +14,10 @@ type contestantsResponse struct {
 }
 
 type contestant struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	PhotoURL string `json:"photoURL"`
+	ID                int    `json:"id"`
+	Name              string `json:"name"`
+	PhotoURL          string `json:"photoURL"`
+	OriginialPhotoURL string `json:"originalPhotoURL"`
 }
 
 func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -33,7 +35,7 @@ func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	rows, err := db.Query("SELECT id, name, photoURL FROM contestants")
+	rows, err := db.Query("SELECT id, name, photoURL, originalPhotoURL FROM contestants")
 	if err != nil {
 		errlog.LogError("Getting contestants", err)
 		writeJSON(w, http.StatusInternalServerError, errorResponse{"error", "internal_server_error"})
@@ -42,16 +44,22 @@ func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 
 	for rows.Next() {
 		var id int
-		var name, photoURL string
-		rows.Scan(&id, &name, &photoURL)
+		var name, photoURL, originalPhotoURL string
+		rows.Scan(&id, &name, &photoURL, &originalPhotoURL)
 		contestants = append(contestants, contestant{
-			ID:       id,
-			Name:     name,
-			PhotoURL: photoURL,
+			ID:                id,
+			Name:              name,
+			PhotoURL:          photoURL,
+			OriginialPhotoURL: originalPhotoURL,
 		})
 	}
 
 	rows.Close()
+
+	for i := range contestants {
+		j := rand.Intn(i + 1)
+		contestants[i], contestants[j] = contestants[j], contestants[i]
+	}
 
 	writeJSON(w, http.StatusOK, contestantsResponse{
 		Status:      "ok",
