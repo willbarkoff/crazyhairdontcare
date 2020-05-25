@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
@@ -21,7 +22,7 @@ func main() {
 	api.Initalize(router)
 
 	cors := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:1234"},
+		AllowedOrigins:   []string{os.Getenv("CORS")},
 		AllowCredentials: true,
 	}).Handler(router)
 
