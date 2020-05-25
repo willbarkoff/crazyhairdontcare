@@ -25,5 +25,5 @@ func main() {
 		AllowCredentials: true,
 	}).Handler(router)
 
-	log.Fatal(http.ListenAndServe(":8080", cors))
+	log.Fatal(http.ListenAndServe(":9696", cors))
 }
