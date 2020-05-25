@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"math/rand"
 	"net/http"
 
@@ -11,6 +12,7 @@ import (
 type contestantsResponse struct {
 	Status      string       `json:"status"`
 	Contestants []contestant `json:"contestants"`
+	Message     string       `json:"message"`
 }
 
 type contestant struct {
@@ -47,6 +49,7 @@ func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		var id int
 		var name, photoURL, originalPhotoURL, cutName string
 		rows.Scan(&id, &name, &photoURL, &originalPhotoURL, &cutName)
+		fmt.Println(cutName)
 		contestants = append(contestants, contestant{
 			ID:                id,
 			Name:              name,
@@ -66,5 +69,6 @@ func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	writeJSON(w, http.StatusOK, contestantsResponse{
 		Status:      "ok",
 		Contestants: contestants,
+		Message:     message,
 	})
 }

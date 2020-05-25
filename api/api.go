@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -25,6 +26,7 @@ type statusResponse struct {
 }
 
 var password string
+var message string
 
 var db *sql.DB
 
@@ -35,6 +37,13 @@ func Initalize(r *httprouter.Router) {
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbDatabase := os.Getenv("DB_DATABASE")
+
+	messageRaw, err := ioutil.ReadFile("./message.txt")
+	if err != nil {
+		panic(err)
+	}
+
+	message = string(messageRaw)
 
 	db, err = sql.Open("mysql", dbUsername+":"+dbPassword+"@/"+dbDatabase+"?charset=utf8mb4&collation=utf8mb4_unicode_ci")
 	if err != nil {
