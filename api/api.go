@@ -52,6 +52,7 @@ func Initalize(r *httprouter.Router) {
 	r.POST("/login", loginRoute)
 	r.GET("/contestants", contestantsRoute)
 	r.POST("/vote", voteRoute)
+	r.GET("/photos/:name", photosRoute)
 }
 func writeJSON(w http.ResponseWriter, status int, thing interface{}) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
