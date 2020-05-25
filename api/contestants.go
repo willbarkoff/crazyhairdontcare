@@ -18,6 +18,7 @@ type contestant struct {
 	Name              string `json:"name"`
 	PhotoURL          string `json:"photoURL"`
 	OriginialPhotoURL string `json:"originalPhotoURL"`
+	CutName           string `json:"cutName"`
 }
 
 func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -35,7 +36,7 @@ func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		return
 	}
 
-	rows, err := db.Query("SELECT id, name, photoURL, originalPhotoURL FROM contestants")
+	rows, err := db.Query("SELECT id, name, photoURL, originalPhotoURL, cutName FROM contestants")
 	if err != nil {
 		errlog.LogError("Getting contestants", err)
 		writeJSON(w, http.StatusInternalServerError, errorResponse{"error", "internal_server_error"})
@@ -44,13 +45,14 @@ func contestantsRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 
 	for rows.Next() {
 		var id int
-		var name, photoURL, originalPhotoURL string
-		rows.Scan(&id, &name, &photoURL, &originalPhotoURL)
+		var name, photoURL, originalPhotoURL, cutName string
+		rows.Scan(&id, &name, &photoURL, &originalPhotoURL, &cutName)
 		contestants = append(contestants, contestant{
 			ID:                id,
 			Name:              name,
 			PhotoURL:          photoURL,
 			OriginialPhotoURL: originalPhotoURL,
+			CutName:           cutName,
 		})
 	}
 
