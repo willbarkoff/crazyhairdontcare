@@ -9,24 +9,24 @@ import (
 )
 
 func voteRoute(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	session, err := store.Get(r, "session-name")
-	if err != nil {
-		errlog.LogError("getting session", err)
-		writeJSON(w, http.StatusInternalServerError, errorResponse{"error", "internal_server_error"})
-		return
-	}
+	// session, err := store.Get(r, "session-name")
+	// if err != nil {
+	// 	errlog.LogError("getting session", err)
+	// 	writeJSON(w, http.StatusInternalServerError, errorResponse{"error", "internal_server_error"})
+	// 	return
+	// }
 
-	loggedIn, ok := session.Values["loggedIn"].(bool)
-	if !ok {
-		errlog.LogError("type assertion not ok when logging in", nil)
-		writeJSON(w, http.StatusInternalServerError, errorResponse{"error", "internal_server_error"})
-		return
-	}
+	// loggedIn, ok := session.Values["loggedIn"].(bool)
+	// if !ok {
+	// 	errlog.LogError("type assertion not ok when logging in", nil)
+	// 	writeJSON(w, http.StatusInternalServerError, errorResponse{"error", "internal_server_error"})
+	// 	return
+	// }
 
-	if !loggedIn {
-		writeJSON(w, http.StatusUnauthorized, errorResponse{"error", "unauthorized"})
-		return
-	}
+	// if !loggedIn {
+	// 	writeJSON(w, http.StatusUnauthorized, errorResponse{"error", "unauthorized"})
+	// 	return
+	// }
 
 	contestantNum, err := strconv.Atoi(r.FormValue("id"))
 	if err != nil {
